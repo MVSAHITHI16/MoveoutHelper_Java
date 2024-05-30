@@ -1,0 +1,292 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package userinterface.serviceAgentWorkArea;
+
+import StudentSale.CityNetwork;
+import StudentSale.EcoSystem;
+import StudentSale.User;
+import StudentSale.serviceAgent.ServiceAgent;
+import StudentSale.std.Donation;
+import StudentSale.std.Student;
+import StudentSale.enums.DonationStatus;
+import StudentSale.enums.PickUp;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author harshila
+ */
+public class ServiceAgentHomeJPanel extends javax.swing.JPanel {
+
+    /**
+     * Creates new form ServiceAgentHomeJPanel
+     */
+    private JPanel userProcessJPanel;
+    private EcoSystem ecoSystem;
+    private CityNetwork cityNetwork;
+    private User userLogged;
+    
+    public ServiceAgentHomeJPanel(JPanel userProcessJPanel, EcoSystem ecoSystem, CityNetwork cityNetwork,
+            User userLogged) {
+        initComponents();
+        
+        this.userProcessJPanel = userProcessJPanel;
+        this.ecoSystem = ecoSystem;
+        this.cityNetwork = cityNetwork;
+        this.userLogged = userLogged;
+        
+        populateDonations();
+        lblheadercityName.setText(cityNetwork.getCityName().name());
+    }
+    
+    public void populateDonations() {
+        
+        ServiceAgent serviceAgent  = (ServiceAgent) userLogged;
+        
+        DefaultTableModel readyToCleanModel = (DefaultTableModel) availableDonationsToCleanUpjTable.getModel();
+        readyToCleanModel.setRowCount(0);
+        int readyToCleanCount=0;
+       
+        DefaultTableModel cleanedModel = (DefaultTableModel) cleanedDonationsjTable.getModel();
+        cleanedModel.setRowCount(0);
+        int cleanedCount=0;
+        
+        //Donations available to clean
+        for(Student std:ecoSystem.getDonorsDirectory().getDonors()) {
+            
+            for(Donation donation:std.getDonations()) {
+                
+                if (donation.getDateofExpiry()!=null){
+                    System.out.println("sussu here loop1 "+ donation);
+                    System.out.println("sussu here if block "+ donation.getDateofExpiry().after(new Date())+" fasakk "+donation.getDonationStatus().name());
+                    if(donation.getPickUp().name().equals(PickUp.CollectionCenter.name()) && (
+                            donation.getDonationStatus().name().equals(DonationStatus.ReadyToPickup.name()) 
+                             || donation.getDonationStatus().name().equals(DonationStatus.Expired.name())) && 
+                            donation.getDateofExpiry().after(new Date())) {
+                        System.out.println("Siv doE  "+donation.getDateofExpiry());
+                        readyToCleanCount++;
+                        Object[] row = new Object[8];
+                        row[0] = readyToCleanCount;
+                        row[1] = donation;
+                        row[2] = donation.getDonor().getName();
+                        row[3] = donation.getCategory().name();
+                        row[4] = donation.getUsageStatus().name();
+                        row[5] = donation.getFoodBank().getLocation();
+                        if(donation.getDateofExpiry()!=null) {
+                            row[6] = donation.getDateofExpiry();
+                        }
+//                        donation.setDonationStatus(DonationStatus.Expired);
+                        row[7] = donation.getDonationStatus().name();
+                        readyToCleanModel.addRow(row);
+                    }
+                }
+            }
+        }
+        
+        availableDonationsToCleanUpCountjLabel.setText(String.valueOf(readyToCleanCount));
+        
+        //Populating cleaned items by serviceAgent
+        for(Donation donation:serviceAgent.getDonations()) {
+            
+            cleanedCount++;
+            Object[] row = new Object[8];
+            row[0] = cleanedCount;
+            row[1] = donation;
+            row[2] = donation.getDonor().getName();
+            row[3] = donation.getCategory().name();
+            row[4] = donation.getUsageStatus().name();
+            if(donation.getPickUp().name().equals(PickUp.Home.name())) {
+                row[5] = donation.getAddressToPickUp();
+            }else{
+                row[5] = donation.getFoodBank().getLocation();
+            }
+            if(donation.getDateofExpiry()!=null) {
+                row[6] = donation.getDateofExpiry();
+            }
+            row[7] = donation.getDonationStatus().name();
+            
+            cleanedModel.addRow(row);
+        }
+        
+        cleanedDonatonsCountjLabel.setText(String.valueOf(cleanedCount)); 
+        
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        cleanedDonationsHeaderjLabel1 = new javax.swing.JLabel();
+        cleanedDonatonsCountjLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        cleanedDonationsjTable = new javax.swing.JTable();
+        pendingCountHeaderjLabel = new javax.swing.JLabel();
+        availableDonationsToCleanUpCountjLabel = new javax.swing.JLabel();
+        currentDonationsHeaderjLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        availableDonationsToCleanUpjTable = new javax.swing.JTable();
+        cleanUpjButton = new javax.swing.JButton();
+        totalCountHeaderjLabel = new javax.swing.JLabel();
+        lblheadercityTag = new javax.swing.JLabel();
+        lblheadercityName = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+
+        setBackground(javax.swing.UIManager.getDefaults().getColor("SlidingButton.selectedBackground"));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        cleanedDonationsHeaderjLabel1.setFont(new java.awt.Font("Lucida Grande", 3, 18)); // NOI18N
+        cleanedDonationsHeaderjLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cleanedDonationsHeaderjLabel1.setText("Donations Cleaned By Me");
+        add(cleanedDonationsHeaderjLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 345, 326, 29));
+
+        cleanedDonatonsCountjLabel.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        cleanedDonatonsCountjLabel.setText("0");
+        add(cleanedDonatonsCountjLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 598, 32, -1));
+
+        cleanedDonationsjTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Serial-No", "Information", "Donor Name", "Category", "UsageStatus", "PickUp Address", "Expiry", "Status"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        cleanedDonationsjTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(cleanedDonationsjTable);
+
+        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 1001, 188));
+
+        pendingCountHeaderjLabel.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        pendingCountHeaderjLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        pendingCountHeaderjLabel.setText("Count :");
+        add(pendingCountHeaderjLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 300, -1, -1));
+
+        availableDonationsToCleanUpCountjLabel.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        availableDonationsToCleanUpCountjLabel.setText("0");
+        add(availableDonationsToCleanUpCountjLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(103, 300, 24, -1));
+
+        currentDonationsHeaderjLabel.setFont(new java.awt.Font("Lucida Grande", 3, 18)); // NOI18N
+        currentDonationsHeaderjLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        currentDonationsHeaderjLabel.setText("Donations Ready To Be CleanedUp in the City");
+        add(currentDonationsHeaderjLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(207, 26, 474, 29));
+
+        availableDonationsToCleanUpjTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Serial-No", "Information", "Student Name", "Category", "UsageStatus", "PickUp Address", "Expiry", "Status"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        availableDonationsToCleanUpjTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(availableDonationsToCleanUpjTable);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 1001, 186));
+
+        cleanUpjButton.setText("Cleaned this Donation Spot");
+        cleanUpjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanUpjButtonActionPerformed(evt);
+            }
+        });
+        add(cleanUpjButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(846, 300, -1, -1));
+
+        totalCountHeaderjLabel.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        totalCountHeaderjLabel.setText("Total Count :");
+        add(totalCountHeaderjLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 598, 100, -1));
+
+        lblheadercityTag.setText("City:");
+        add(lblheadercityTag, new org.netbeans.lib.awtextra.AbsoluteConstraints(844, 38, -1, 30));
+        add(lblheadercityName, new org.netbeans.lib.awtextra.AbsoluteConstraints(905, 38, 130, 30));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/bg.png"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-60, -30, -1, -1));
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cleanUpjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanUpjButtonActionPerformed
+        // TODO add your handling code here:
+        
+        ServiceAgent serviceAgent  = (ServiceAgent) userLogged;
+        int selectedIndex = availableDonationsToCleanUpjTable.getSelectedRow();
+        if(selectedIndex<0 ) {
+            JOptionPane.showMessageDialog(this, "Please select a row");
+            return;
+        }
+        DefaultTableModel currentDonationsModel = (DefaultTableModel) availableDonationsToCleanUpjTable.getModel();
+        Donation donation = (Donation) currentDonationsModel.getValueAt(selectedIndex, 1);
+
+        donation.setCleaner(serviceAgent);
+        donation.setLastUpdatedDate(new Date());
+        donation.setModifiedBy(userLogged.getName());
+        donation.setDonationStatus(DonationStatus.Closed);
+        
+        serviceAgent.getDonations().add(donation);
+        populateDonations();
+    }//GEN-LAST:event_cleanUpjButtonActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel availableDonationsToCleanUpCountjLabel;
+    private javax.swing.JTable availableDonationsToCleanUpjTable;
+    private javax.swing.JButton cleanUpjButton;
+    private javax.swing.JLabel cleanedDonationsHeaderjLabel1;
+    private javax.swing.JTable cleanedDonationsjTable;
+    private javax.swing.JLabel cleanedDonatonsCountjLabel;
+    private javax.swing.JLabel currentDonationsHeaderjLabel;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblheadercityName;
+    private javax.swing.JLabel lblheadercityTag;
+    private javax.swing.JLabel pendingCountHeaderjLabel;
+    private javax.swing.JLabel totalCountHeaderjLabel;
+    // End of variables declaration//GEN-END:variables
+}

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="MoveOutHelpers">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/MoveOutHelpers/db4o-8.0.184.15484-all-java5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MoveOutHelpers/jcalendar-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MoveOutHelpers/mail.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
